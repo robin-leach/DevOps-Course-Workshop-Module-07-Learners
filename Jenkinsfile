@@ -39,4 +39,22 @@ pipeline {
             }
         }
     }
+    
+    post {
+        success {
+            slackSend channel: '#test-website',
+                      color: 'good',
+                      message: "The pipeline ${currentBuild.fullDisplayName} completed successfully."
+        }
+        unstable {
+            slackSend channel: '#test-website',
+                      color: 'warning',
+                      message: "The pipeline ${currentBuild.fullDisplayName} is hella unstable."
+        }
+        failure {
+            slackSend channel: '#test-website',
+                      color: 'danger',
+                      message: "The pipeline ${currentBuild.fullDisplayName} failed :( I am so sorry."
+        }
+    }
 }
