@@ -20,6 +20,11 @@ jobs:
     - name: Typescript linting and tests
       run: cd DotnetTemplate.Web && npm run lint && npm t
 
+  docker-publish:
+    needs: [build]
+    runs-on: ubuntu-latest  
+    if: github.ref == 'refs/heads/main'
+    steps:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
 
@@ -34,3 +39,16 @@ jobs:
       with:
         push: true
         tags: robinleach/dotnettemplate:latest
+
+  heroku-deploy:
+    needs: [build, docker-publish]
+    runs-on: ubuntu-latest  
+    if: github.ref == 'refs/heads/main'
+    steps:
+    - name: Publish to Heroku
+      uses: akhileshns/heroku-deploy@v3.6.8
+      with:
+        heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+        heroku_app_name: "module-8"
+        heroku_email: "robin.leach@softwire.com"
+        usedocker: true
