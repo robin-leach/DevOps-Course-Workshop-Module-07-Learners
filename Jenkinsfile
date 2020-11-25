@@ -38,6 +38,14 @@ pipeline {
                 sh 'cd DotnetTemplate.Web && npm run lint && npm t'
             }
         }
+        stage('Publish to Docker Hub') {
+            agent {
+                docker { image 'node:14-alpine' }
+            }
+            steps {
+                sh 'cd DotnetTemplate.Web && npm run lint && npm t'
+            }
+        }
     }
     
     post {

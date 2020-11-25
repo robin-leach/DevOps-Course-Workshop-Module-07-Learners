@@ -1,10 +1,10 @@
 name: Continuous Integration
-on: [push]                      # Will make the workflow run every time you push to any branch
+on: [push]
 
 jobs:
   build:
     name: Build and test
-    runs-on: ubuntu-latest      # Sets the build environment a machine with the latest Ubuntu installed
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout the code
       uses: actions/checkout@v2
@@ -61,3 +61,13 @@ jobs:
         heroku_app_name: "module-8"
         heroku_email: "robin.leach@softwire.com"
         usedocker: true
+
+  slack:
+    name: Slack notify
+    needs: [build]
+    runs-on: ubuntu-latest  
+    steps:
+    - name: Send a slack notification
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
